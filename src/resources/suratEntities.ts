@@ -9,16 +9,16 @@ interface SuratEntites {
 
 ;(async () => {
     let filename = `dataset/alquran/data.json`
-    let data = JSON.parse(fs.readFileSync(filename).toString().toLowerCase())
+    let data = JSON.parse(fs.readFileSync(filename).toString())
     
     let surat: SuratEntites[] = data.map((tmp_data: any) => {
         let data: SuratEntites = {
-            name: 'alquran-surat',
-            intent: tmp_data.nama.replace(' ',''),
+            name: tmp_data.nama,
+            intent: tmp_data.nama.replace(' ','').toLowerCase(),
             sourceText: [
-                tmp_data.nama,
-                tmp_data.nama.replace(' ',''),
-                tmp_data.nama.replace(' ','-'),
+                tmp_data.nama.toLowerCase(),
+                tmp_data.nama.replace(' ','').toLowerCase(),
+                tmp_data.nama.replace(' ','-').toLowerCase(),
             ]
         };
         data.sourceText = Array.from(new Set(data.sourceText))
