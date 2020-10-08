@@ -11,10 +11,10 @@ const manager = new NlpManager({
 
 let data = JSON.parse(fs.readFileSync('dataset/namedEntities/surat.json').toString())
 
-let namedEntities = data[0].name
+let namedEntities = 'alquran-surat'
 data.forEach((data: any) => {
     manager.addNamedEntityText(
-        data.name,
+        namedEntities,
         data.intent,
         ['id'],
         data.sourceText,
