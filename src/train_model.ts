@@ -24,19 +24,34 @@ data.forEach((data: any) => {
 
 
 manager.addDocument('id', `saya ingin baca surat %${namedEntities}%`, 'surat');
+manager.addDocument('id', `surat %${namedEntities}%`, 'surat');
+manager.addDocument('id', `carikan surat %${namedEntities}%`, 'surat');
+manager.addDocument('id', `bisa carikan surat %${namedEntities}%`, 'surat');
+manager.addDocument('id', `tolong carikan surat %${namedEntities}%`, 'surat');
+manager.addDocument('id', `saya ingin baca surat %${namedEntities}% ayat %number%`, 'surat');
 manager.addDocument('id', `saya ingin baca surat %${namedEntities}% ayat %number% sampai %number% `, 'surat');
-manager.addAnswer('id', 'surat', `surat`);
+
+
+manager.addDocument('id', `assalamualaikum`, 'salam');
+manager.addAnswer('id', 'salam', `waalaikumsallam`);
 
 ;(async () => {
     await manager.train();
 
-    let tanyain: any[] = ['surat An-Nas ayat 1 sampai 5','surat annas','surat alfatiha','surat alfatihah ayat 1 sampai 4'];
-    for(let tanya of tanyain) {
-        let result = await manager.process(tanya.toLowerCase())
+    // let result = await manager.process('assalamualaikum, saya ingin mencari surat annas')
     
-        // console.log(result)
+    // console.log(result)
+
+
+
+    let tanyain: any[] = ['surat An-Nas ayat 1 sampai 5','surat annas','surat alfatiha','surat alfatihah ayat 1 sampai 4','assalamualaikum, saya ingin mencari surat annas','tolong carikan surat al ikhlas ayat ke 3'];
+    for(let tanya of tanyain) {
+        let result = await manager.process('id',tanya.toLowerCase())
+    
+        console.log(result)
     
         let targetMsg = ''
+        // ﴾١﴿
     
         for(let i in result.entities) {
             let entities = result.entities
