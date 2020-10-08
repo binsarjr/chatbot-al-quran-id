@@ -13,7 +13,7 @@ interface SuratEntites {
     
     let surat: SuratEntites[] = data.map((tmp_data: any) => {
         let data: SuratEntites = {
-            name: 'alquran.surat',
+            name: 'alquran-surat',
             intent: tmp_data.nama.replace(' ',''),
             sourceText: [
                 tmp_data.nama,
