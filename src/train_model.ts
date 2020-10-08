@@ -23,13 +23,30 @@ data.forEach((data: any) => {
 
 
 
-manager.addDocument('id', `saya ingin baca surat %${namedEntities}%`, 'surat');
 manager.addDocument('id', `surat %${namedEntities}%`, 'surat');
-manager.addDocument('id', `carikan surat %${namedEntities}%`, 'surat');
-manager.addDocument('id', `bisa carikan surat %${namedEntities}%`, 'surat');
-manager.addDocument('id', `tolong carikan surat %${namedEntities}%`, 'surat');
+manager.addDocument('id', `surat %${namedEntities}% ayat %number%`, 'surat');
+manager.addDocument('id', `surat %${namedEntities}% ayat %number% sampai %number%`, 'surat');
+
+manager.addDocument('id', `saya ingin baca surat %${namedEntities}%`, 'surat');
 manager.addDocument('id', `saya ingin baca surat %${namedEntities}% ayat %number%`, 'surat');
-manager.addDocument('id', `saya ingin baca surat %${namedEntities}% ayat %number% sampai %number% `, 'surat');
+manager.addDocument('id', `saya ingin baca surat %${namedEntities}% ayat %number% sampai %number%`, 'surat');
+manager.addDocument('id', `carikan surat %${namedEntities}%`, 'surat');
+manager.addDocument('id', `carikan surat %${namedEntities}% ayat %number%`, 'surat');
+manager.addDocument('id', `carikan surat %${namedEntities}% ayat %number% sampai %number%`, 'surat');
+
+manager.addDocument('id', `bisa carikan surat %${namedEntities}%`, 'surat');
+manager.addDocument('id', `bisa carikan surat %${namedEntities}% ayat %number%`, 'surat');
+manager.addDocument('id', `bisa carikan surat %${namedEntities}% ayat %number% sampai %number%`, 'surat');
+
+manager.addDocument('id', `tolong carikan surat %${namedEntities}%`, 'surat');
+manager.addDocument('id', `tolong carikan surat %${namedEntities}% ayat %number%`, 'surat');
+manager.addDocument('id', `tolong carikan surat %${namedEntities}% ayat %number% sampai %number%`, 'surat');
+
+manager.addDocument('id', `saya ingin mencari surat %${namedEntities}%`, 'surat');
+manager.addDocument('id', `saya ingin mencari surat %${namedEntities}% ayat %number%`, 'surat');
+manager.addDocument('id', `saya ingin mencari surat %${namedEntities}% ayat %number% sampai %number%`, 'surat');
+
+manager.addAnswer('id', 'surat', `surat`);
 
 
 manager.addDocument('id', `assalamualaikum`, 'salam');
