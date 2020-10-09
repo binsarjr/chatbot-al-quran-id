@@ -1,5 +1,11 @@
 import fs from "fs";
 import path from "path";
+import readline from "readline";
+
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+});
 
 // Classes
 import { ChatbotEntities } from "./ChatbotEntities";
@@ -10,7 +16,7 @@ const {
 const Recursive = require("recursive-readdir");
 
 // Interface
-import { NlpManager, corpusObj } from "./interfaces/node-nlp";
+import { NlpManager, corpusObj, process as NlpResult } from "./interfaces/node-nlp";
 
 interface trainOpts {
     folderPath?: string;
@@ -21,7 +27,7 @@ interface trainOpts {
 }
 
 
-class Chatbot {
+class Chatbot{
     locale: string;
     nlp: NlpManager;
     corpusDir: string;
@@ -37,11 +43,6 @@ class Chatbot {
         })
 
         this.chatbotEntities = new ChatbotEntities(this.locale,this.nlp)
-        this.initialEntities()
-    }
-
-    initialEntities() {
-        this.chatbotEntities.suratEntities()
     }
 
 
@@ -81,15 +82,58 @@ class Chatbot {
                 }
             })
         })
-
-        
-        // const hrstart = process.hrtime();
         await this.nlp.train();
-        // const hrend = process.hrtime(hrstart);
-        // console.info('Trained (hr): %ds %dms', hrend[0], hrend[1] / 1000000);
-
-
         this.nlp.save(modelPath, modelMinified)
+    }
+
+    async process(utterance: string) {
+        return await this.nlp.process(this.locale,utterance)
+    }
+
+
+    cariSurat(result: NlpResult) {
+        let target = {
+            surat: '',
+            start: 0,
+            end: 0,
+        }
+        
+        // ﴾١﴿
+        for(let i in result.entities) {
+            let entities = result.entities
+            if(entities[i].entity == 'alquran-surat') {
+                target.surat = entities[i].option
+    
+                if(
+                    typeof entities[parseInt(i)+1] !== 'undefined'
+                    &&
+                    entities[parseInt(i)+1].entity == 'number'
+                ) {
+                    let ayatPrefix = entities[parseInt(i)+1];
+                    target.start = ayatPrefix.resolution.value
+                }
+    
+                if(
+                    typeof entities[parseInt(i)+2] !== 'undefined'
+                    &&
+                    entities[parseInt(i)+2].entity == 'number'
+                    && 
+                    entities[parseInt(i)+1].resolution.value != entities[parseInt(i)+2].resolution.value
+                    &&
+                    entities[parseInt(i)+1].resolution.value < entities[parseInt(i)+2].resolution.value
+                ) {
+                    let ayatSuffix = entities[parseInt(i)+2];
+                    target.end = ayatSuffix.resolution.value
+                }
+    
+            }
+        }
+    
+        if(target.surat != '') {
+            return this.chatbotEntities.getSuratAlquranEntities(target.surat, target.start,target.end)
+        } else {
+            return "Maaf,kami tidak bisa menemukan surat yang anda cari."
+        }
     }
 
 
@@ -97,12 +141,12 @@ class Chatbot {
         if(modeRecursive) {
             return await Recursive(folderPath)
         } else {
-            let files = fs.readdirSync(folderPath).map((dir: string) => {
+            let files = fs.readdirSync(folderPath).map(dir => {
                 if(fs.lstatSync(path.join(folderPath, dir)).isFile()) {
                     return path.join(folderPath, dir)
                 }
             })
-            files = files.filter((el: any) => el != null)
+            files = files.filter(el => el != null)
             return files
         }
     }
@@ -112,6 +156,21 @@ class Chatbot {
 ;(async () => {
     let chatbot = new Chatbot()
     await chatbot.train({force:true})
-    let res = await chatbot.nlp.process('id',"tolong carikan surat annas ayat ke 2")
-    console.log(res)
+
+    async function rQuestion() {
+        await rl.question("You > ", async function(input) {
+            let result = await chatbot.process(input)
+
+            if(result.intent == 'tanyaSurat') {
+                console.log(`bot > ${chatbot.cariSurat(result)}`)
+            } else {
+                console.log(`bot > ${result.answer}`)
+            }
+
+            await rQuestion()
+        });
+    }
+
+    await rQuestion()
+
 })();
