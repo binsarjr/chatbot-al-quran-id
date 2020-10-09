@@ -33,7 +33,7 @@ class Chatbot {
         
         this.locale = locale;
         this.nlp = new NlpManager({
-            languages: [this.locale]
+            languages: [this.locale], nlu: { log: false }
         })
 
         this.chatbotEntities = new ChatbotEntities(this.locale,this.nlp)
@@ -85,7 +85,7 @@ class Chatbot {
         const hrstart = process.hrtime();
         await this.nlp.train();
         const hrend = process.hrtime(hrstart);
-        console.info('Trained (hr): %ds %dms', hrend[0], hrend[1] / 1000000);
+        // console.info('Trained (hr): %ds %dms', hrend[0], hrend[1] / 1000000);
 
 
         this.nlp.save(modelPath, modelMinified)
