@@ -18,6 +18,7 @@ interface SuratEntites {
             sourceText: [
                 tmp_data.nama.toLowerCase(),
                 tmp_data.nama.replace(' ','').toLowerCase(),
+                tmp_data.nama.replace(' ','-').toLowerCase(),
                 tmp_data.arti.toLowerCase(),
                 tmp_data.arti.replace(' ','').toLowerCase(),
             ]
