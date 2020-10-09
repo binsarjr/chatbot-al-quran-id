@@ -20,7 +20,8 @@
     "homepage": "https://github.com/binsarjr/chatbot-al-quran-id#readme",
     "dependencies": {
         "@open-wa/wa-automate": "^2.0.29",
-        "node-nlp": "^4.13.3"
+        "node-nlp": "^4.13.3",
+        "recursive-readdir": "^2.2.2"
     },
     "devDependencies": {
         "@types/axios": "^0.14.0",
