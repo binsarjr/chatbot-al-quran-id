@@ -45,7 +45,7 @@ interface sentiment {
     locale: string;
     vote: string;
 }
-interface proccess {
+export interface process {
     locale: string;
     utterance: string;
     languageGuessed: boolean;
@@ -95,7 +95,7 @@ export interface NlpManager {
     addBeforeLastCondition(locale: string, name: string, words: string[], opts: any): any;
     describeLanguage(locale: string, name: string): any;
     train(): any;
-    process(locale: string, utterance: string, context ? : any, settings ? : any): proccess;
+    process(locale: string, utterance: string, context ? : any, settings ? : any): process;
     extractEntities(locale: string, utterance: string, context: any, settings: any): any;
     toObj(): any;
     fromObj(obj: any): any;
