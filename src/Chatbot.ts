@@ -37,6 +37,7 @@ class Chatbot {
         })
 
         this.chatbotEntities = new ChatbotEntities(this.locale,this.nlp)
+        this.initialEntities()
     }
 
     initialEntities() {
@@ -82,9 +83,9 @@ class Chatbot {
         })
 
         
-        const hrstart = process.hrtime();
+        // const hrstart = process.hrtime();
         await this.nlp.train();
-        const hrend = process.hrtime(hrstart);
+        // const hrend = process.hrtime(hrstart);
         // console.info('Trained (hr): %ds %dms', hrend[0], hrend[1] / 1000000);
 
 
@@ -110,8 +111,7 @@ class Chatbot {
 
 ;(async () => {
     let chatbot = new Chatbot()
-    chatbot.initialEntities()
     await chatbot.train({force:true})
-    let res = await chatbot.nlp.process('id',"tolong carikan surat annas")
+    let res = await chatbot.nlp.process('id',"tolong carikan surat annas ayat ke 2")
     console.log(res)
 })();
