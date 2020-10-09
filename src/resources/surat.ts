@@ -14,8 +14,11 @@ for (let i = 1; i <= 144; i++) {
         return data
     })
 
-
-    fs.writeFileSync(filename,JSON.stringify(data));
+    let context = JSON.stringify(data)
+    if(i != 1) {
+        context = context.replace('بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ','')
+    }
+    fs.writeFileSync(filename,context);
     console.log(`Completed: Surat ke ${i}`)
     // process.exit();
 }
