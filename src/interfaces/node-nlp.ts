@@ -1,4 +1,71 @@
-export interface NlpManagerInterface {
+interface nluAnswer {
+    classifications: any[];
+    entities: any;
+    explanation: any;
+}
+interface classifications {
+    intent: string;
+    score: number;
+}
+interface resolution {
+    strValue: string;
+    value: number;
+    subtype: string;
+}
+interface sourceEntities {
+    start: number;
+    end: number;
+    resolution: resolution[];
+    text: string;
+    typeName: string;
+}
+interface entities {
+    start: number;
+    end: number;
+    len: number;
+    levenshtein: number;
+    accuracy: number;
+    entity: string;
+    resolution: resolution;
+    type: string;
+    option: string;
+    sourceText: string;
+    utteranceText: string;
+}
+interface answers {
+    answer: string;
+    opts: any;
+}
+interface sentiment {
+    score: number;
+    numWords: number;
+    numHits: number;
+    average: number;
+    type: any;
+    locale: string;
+    vote: string;
+}
+interface proccess {
+    locale: string;
+    utterance: string;
+    languageGuessed: boolean;
+    localeIso2: string;
+    language: string;
+    nluAnswer: nluAnswer;
+    classifications: classifications[];
+    intent: string;
+    score: number;
+    domain: string;
+    optionalUtterance: string;
+    sourceEntities: sourceEntities[];
+    entities: entities[];
+    answers: answers[];
+    answer: string | undefined;
+    actions: any[];
+    sentiment: sentiment
+}
+
+export interface NlpManager {
     addDocument(locale: string, utterance: string, intent: string): any;
     removeDocument(locale: string, utterance: string, intent: string): any;
     addLanguage(locale: string): any;
@@ -7,12 +74,12 @@ export interface NlpManagerInterface {
     getIntentDomain(locale: string, intent: string): any;
     getDomains(): any;
     guessLanguage(text: string): any;
-    addAction(intent: string, action: any, parameters: any, fn?: any): any;
+    addAction(intent: string, action: any, parameters: any, fn ? : any): any;
     getActions(intent: string): any;
     removeAction(intent: string, action: any, parameters: any): any;
     removeActions(intent: string): any;
-    addAnswer(locale: string, intent: string, answer: string, opts?: any): any;
-    removeAnswer(locale: string, intent: string, answer: string, opts?: any): any;
+    addAnswer(locale: string, intent: string, answer: string, opts ? : any): any;
+    removeAnswer(locale: string, intent: string, answer: string, opts ? : any): any;
     findAllAnswers(locale: string, intent: string): any;
     getSentiment(locale: string, utterance: string): any;
     addNamedEntityText(entityName: string, optionName: string, languages: string[], texts: string[]): any;
@@ -28,13 +95,20 @@ export interface NlpManagerInterface {
     addBeforeLastCondition(locale: string, name: string, words: string[], opts: any): any;
     describeLanguage(locale: string, name: string): any;
     train(): any;
-    process(locale: string, utterance: string, context?: any, settings?: any): any;
+    process(locale: string, utterance: string, context ? : any, settings ? : any): proccess;
     extractEntities(locale: string, utterance: string, context: any, settings: any): any;
     toObj(): any;
     fromObj(obj: any): any;
-    export(minified?: boolean): any;
+    export (minified ? : boolean): any;
     import(data: any): any;
-    save(srcFileName: string, minified?: boolean): any;
+    save(srcFileName: string, minified ? : boolean): any;
     load(srcFileName: string): any;
-    loadExcel(fileName?: string): any;
+    loadExcel(fileName ? : string): any;
+}
+
+
+export interface corpusObj {
+    intent: string;
+    utterances: string[];
+    answers: string[];
 }
