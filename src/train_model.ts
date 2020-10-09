@@ -1,10 +1,11 @@
 import fs from "fs";
+import { NlpManagerInterface } from "./interfaces/node-nlp";
 
 const {
     NlpManager,
 } = require('node-nlp');
 
-const manager = new NlpManager({
+const manager: NlpManagerInterface = new NlpManager({
     languages: ['id']
 });
 
