@@ -1,6 +1,5 @@
 import fs from "fs";
 import path from "path";
-import similarity from "string-similarity";
 import { Tokenizer } from "./nlp";
 
 // Classes
@@ -10,6 +9,9 @@ const {
     NlpManager,
 } = require('node-nlp');
 const Recursive = require("recursive-readdir");
+const { SpellCheck } = require('@nlpjs/similarity');
+const { NGrams } = require('@nlpjs/utils');
+
 
 // Interface
 import { NlpManager, corpusObj, process as NlpResult } from "./interfaces/node-nlp";
@@ -35,7 +37,7 @@ export class Chatbot{
         this.corpusDir = 'dataset/corpus'
         this.formalizationDir = 'dataset/formalization'
 
-        
+
         this.locale = locale;
         this.nlp = new NlpManager({
             languages: [this.locale], nlu: { log: false }
@@ -89,7 +91,10 @@ export class Chatbot{
     }
 
     async process(utterance: string) {
-        return await this.nlp.process(this.locale,this.formalization(utterance))
+        utterance = utterance.toLowerCase()
+        let formalized = this.formalization(utterance)
+        console.log(formalized)
+        return await this.nlp.process(this.locale,formalized)
     }
 
 
@@ -140,14 +145,10 @@ export class Chatbot{
 
     formalization(text: string) {
         let tokenized: string[] = Tokenizer.word_tokenizer(text)
-        let results: string[] = [];
-        tokenized.forEach(token => {
-            let find = similarity.findBestMatch(token, this.formalizationData)
-            if(find.bestMatch.rating > .79) results.push(find.bestMatch.target)
-            else results.push(token)
-
-        })
-        return results.join(' ')
+        let ngrams = new NGrams({ byWord: true });
+        let freqs = ngrams.getNGramsFreqs(this.formalizationData, 1);
+        let spellCheck = new SpellCheck({ features: freqs });
+        return spellCheck.check(tokenized).join(' ');
     }
 
     async formalizationGetData() {
@@ -158,6 +159,7 @@ export class Chatbot{
             formals = [...formals, ...data]
         })
         formals = Array.from(new Set(formals))
+        formals = formals.filter(text => text != null)
         return formals
     }
 
