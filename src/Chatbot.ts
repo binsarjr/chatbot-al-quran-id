@@ -1,11 +1,7 @@
 import fs from "fs";
 import path from "path";
-import readline from "readline";
-
-const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout
-});
+import similarity from "string-similarity";
+import { Tokenizer } from "./nlp";
 
 // Classes
 import { ChatbotEntities } from "./ChatbotEntities";
@@ -31,10 +27,13 @@ export class Chatbot{
     locale: string;
     nlp: NlpManager;
     corpusDir: string;
+    formalizationDir: string;
+    formalizationData: string[] = [];
     chatbotEntities: ChatbotEntities;
 
     constructor(locale: string = 'id') {
         this.corpusDir = 'dataset/corpus'
+        this.formalizationDir = 'dataset/formalization'
 
         
         this.locale = locale;
@@ -43,6 +42,9 @@ export class Chatbot{
         })
 
         this.chatbotEntities = new ChatbotEntities(this.locale,this.nlp)
+
+        // data untuk formalisasi
+        this.formalizationGetData().then(formal => this.formalizationData = formal)
     }
 
 
@@ -69,14 +71,14 @@ export class Chatbot{
             let jsonObj: corpusObj[] = data
             jsonObj.forEach(data => {
                 if (data.intent !== 'None') {
-                    data.utterances.forEach((utterance: string) => {
+                    data.utterances.forEach(utterance => {
                         this.nlp.addDocument(this.locale, utterance.toLowerCase(), data.intent);
                     });
-                    data.answers.forEach((answer: any) => {
+                    data.answers.forEach(answer => {
                         this.nlp.addAnswer(this.locale, data.intent, answer);
                     });
                 } else {
-                    data.answers.forEach((answer: any) => {
+                    data.answers.forEach(answer => {
                         this.nlp.addAnswer(this.locale, "None", answer);
                     });
                 }
@@ -87,7 +89,7 @@ export class Chatbot{
     }
 
     async process(utterance: string) {
-        return await this.nlp.process(this.locale,utterance)
+        return await this.nlp.process(this.locale,this.formalization(utterance))
     }
 
 
@@ -136,6 +138,29 @@ export class Chatbot{
         }
     }
 
+    formalization(text: string) {
+        let tokenized: string[] = Tokenizer.word_tokenizer(text)
+        let results: string[] = [];
+        tokenized.forEach(token => {
+            let find = similarity.findBestMatch(token, this.formalizationData)
+            if(find.bestMatch.rating > .79) results.push(find.bestMatch.target)
+            else results.push(token)
+
+        })
+        return results.join(' ')
+    }
+
+    async formalizationGetData() {
+        let files: string[] = await this.getFiles(this.formalizationDir)
+        let formals: string[] = []
+        files.forEach(file => {
+            let data = fs.readFileSync(file).toString().toLowerCase().split('\n')
+            formals = [...formals, ...data]
+        })
+        formals = Array.from(new Set(formals))
+        return formals
+    }
+
 
     private async getFiles(folderPath: string, modeRecursive: boolean = true) {
         if(modeRecursive) {
@@ -151,26 +176,3 @@ export class Chatbot{
         }
     }
 }
-
-
-// ;(async () => {
-//     let chatbot = new Chatbot()
-//     await chatbot.train({force:true})
-
-//     async function rQuestion() {
-//         await rl.question("You > ", async function(input) {
-//             let result = await chatbot.process(input)
-
-//             if(result.intent == 'tanyaSurat') {
-//                 console.log(`bot > ${chatbot.cariSurat(result)}`)
-//             } else {
-//                 console.log(`bot > ${result.answer}`)
-//             }
-
-//             await rQuestion()
-//         });
-//     }
-
-//     await rQuestion()
-
-// })();
