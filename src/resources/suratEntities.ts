@@ -1,4 +1,9 @@
+import { SimpleListener } from "@open-wa/wa-automate";
 import fs from "fs";
+
+const stringSimilarity = require('string-similarity');
+
+
 
 interface SuratEntites {
     name: string;
@@ -19,10 +24,15 @@ interface SuratEntites {
                 tmp_data.nama.toLowerCase(),
                 tmp_data.nama.replace(' ','').toLowerCase(),
                 tmp_data.nama.replace(' ','-').toLowerCase(),
-                tmp_data.arti.toLowerCase(),
-                tmp_data.arti.replace(' ','').toLowerCase(),
+                tmp_data.nama.replace('\'',' ').toLowerCase(),
             ]
         };
+        if(stringSimilarity.compareTwoStrings(tmp_data.nama.replace(' ','').toLowerCase(),tmp_data.arti.replace(' ','').toLowerCase()) > 0.79) {
+            data.sourceText = [...data.sourceText, ...[
+                tmp_data.arti.toLowerCase(),
+                tmp_data.arti.replace(' ','').toLowerCase(),
+            ]]
+        }
         data.sourceText = Array.from(new Set(data.sourceText))
         return data
     })
