@@ -28,7 +28,7 @@
     "answers": ["Demikian juga!", "Senang mendengarnya"]
 }, {
     "intent": "user.testing",
-    "utterances": ["test", "testing", "testing chatbot", "this is a test", "just test you"],
+    "utterances": ["test", "tes", "testing", "testing chatbot"],
     "answers": ["Saya suka diuji. Ini membantu saya tetap tajam", "Saya berharap untuk lulus ujian Anda. Jangan ragu untuk sering menguji saya"]
 }, {
     "intent": "user.lovesagent",

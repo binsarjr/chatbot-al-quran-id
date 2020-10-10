@@ -1,7 +1,7 @@
 [{
     "intent": "salam.islam",
     "utterances": [
-        "assalamu'alaikum", "assalamualaikum", "assalamu'alaikum warahmatullahi wabarakaatuh", "assalamualaikum warahmatullahi wabarakaatuh"
+        "assalamu'alaikum", "assalamualaikum", "assalamu'alaikum warahmatullahi wabarakaatuh", "assalamualaikum warahmatullahi wabarakaatuh", "asslamualaikum", "asslmualaikum"
     ],
     "answers": [
         "Wa'alaikumsalam", "Waalaikumsalam", "Wa'alaikumsalam Warahmatullahi Wabarakaatuh", "Waalaikumsalam Warahmatullahi Wabarakaatuh"

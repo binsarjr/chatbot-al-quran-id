@@ -24,7 +24,7 @@
     "answers": ["Sampai nanti", "sampai jumpa lagi!", "Saya berharap kita ketemu lagi."]
 }, {
     "intent": "greetings.hello",
-    "utterances": ["halo", "hai", "helo"],
+    "utterances": ["halo", "hai", "helo", "hei"],
     "answers": ["Hai!", "Halo!"]
 }, {
     "intent": "greetings.howareyou",
