@@ -14,15 +14,15 @@ export class WABot {
         let WABot = new this(client, chatbot)
 
     
-        WABot.client.setPresence(true)
         WABot.clearAllChatSchedule()
         await WABot.onAddedToGroup()
         await WABot.onIncomingCall()
         await WABot.onMessage()
+
     }
 
     clearAllChatSchedule() {
-        schedule.scheduleJob('* * * * * 7',async () =>{ // hapus semua chat setiap hari
+        schedule.scheduleJob('* * * * * 7',async () =>{ // hapus semua chat setiap hari ahad
             let chatIds: string[] = await this.client.getAllChatIds()
             chatIds.forEach(async chatId => await this.client.clearChat(chatId))
         });
@@ -45,14 +45,18 @@ export class WABot {
 
     async onMessage() {
         await this.client.onMessage(async message => {
+            await this.client.simulateTyping(message.from, true)
             let result = await this.chatbot.process(message.content)
             if(!message.isGroupMsg) {
+                this.client.setPresence(true)
                 if(result.intent == 'tanyaSurat') {
                     await this.client.sendText(message.from, this.chatbot.cariSurat(result));
                 } else {
                     await this.client.sendText(message.from, result.answer ?? '');
                 }
+
             }
+            await this.client.simulateTyping(message.from, false)
         })
     }
 
