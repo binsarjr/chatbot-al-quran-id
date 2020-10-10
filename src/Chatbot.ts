@@ -27,7 +27,7 @@ interface trainOpts {
 }
 
 
-class Chatbot{
+export class Chatbot{
     locale: string;
     nlp: NlpManager;
     corpusDir: string;
@@ -153,24 +153,24 @@ class Chatbot{
 }
 
 
-;(async () => {
-    let chatbot = new Chatbot()
-    await chatbot.train({force:true})
+// ;(async () => {
+//     let chatbot = new Chatbot()
+//     await chatbot.train({force:true})
 
-    async function rQuestion() {
-        await rl.question("You > ", async function(input) {
-            let result = await chatbot.process(input)
+//     async function rQuestion() {
+//         await rl.question("You > ", async function(input) {
+//             let result = await chatbot.process(input)
 
-            if(result.intent == 'tanyaSurat') {
-                console.log(`bot > ${chatbot.cariSurat(result)}`)
-            } else {
-                console.log(`bot > ${result.answer}`)
-            }
+//             if(result.intent == 'tanyaSurat') {
+//                 console.log(`bot > ${chatbot.cariSurat(result)}`)
+//             } else {
+//                 console.log(`bot > ${result.answer}`)
+//             }
 
-            await rQuestion()
-        });
-    }
+//             await rQuestion()
+//         });
+//     }
 
-    await rQuestion()
+//     await rQuestion()
 
-})();
+// })();
